@@ -1,40 +1,51 @@
 package addon;
 
+import DAO.FileDao;
+import DAO.JsonDAO;
+
 public class AddOn {
 
     private static String       DPENDENCY = "/dependency.json";
     private static String       IDENTITY = "/identity.json";
+    private static String       PROPERTY = "/properties.json";
 
 
     protected IdentityConfig    identity;
     protected DependencyConfig  dependencies;
+    protected PropertiesConfig  properties;
     protected String            aoPath;
 
     public AddOn(String path) {
         aoPath = path;
     }
 
-    private IdentityConfig loadIdentity(String path) throws Exception {
-        // read path directory
-        IdentityConfig ic = new IdentityConfig();
-        // set variables
-        return ic;
+    private void loadIdentity(String path) throws Exception {
+        FileDao fd = new FileDao(path);
+        JsonDAO<IdentityConfig> jd = new JsonDAO<>(IdentityConfig.class);
+        identity = jd.read(fd.read(null));
     }
 
-    private DependencyConfig loadDependencies(String path) throws Exception {
-        // read path directory
-        DependencyConfig dc = new DependencyConfig();
-        // set variables
-        return dc;
+    private void loadProperties(String path) throws Exception {
+        FileDao fd = new FileDao(path);
+        JsonDAO<PropertiesConfig> jd = new JsonDAO<>(PropertiesConfig.class);
+        properties = jd.read(fd.read(null));
     }
 
-    public void load() {
-
+    private void loadDependencies(String path) throws Exception {
+        FileDao fd = new FileDao(path);
+        JsonDAO<DependencyConfig> jd = new JsonDAO<>(DependencyConfig.class);
+        DependencyConfig dc = jd.read(fd.read(null));
+        // set variables
     }
 
     public void explore() throws Exception {
-        identity = loadIdentity(aoPath + IDENTITY);
-        dependencies = loadDependencies(aoPath + DPENDENCY);
+        loadIdentity(aoPath + IDENTITY);
+//        loadDependencies(aoPath + DPENDENCY);
+        loadProperties(aoPath + PROPERTY);
+    }
+
+    public String getAoPath() {
+        return aoPath;
     }
 
     public IdentityConfig getIdentity() {

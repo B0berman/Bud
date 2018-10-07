@@ -1,0 +1,28 @@
+{
+  "children": [
+    {
+      "drawableId": "1",
+      "position": {
+        "values": [-0.5, 0, 0]
+      },
+      "rotation": {
+        "values": [0, 0, 0]
+      },
+      "scale": {
+        "values": [0, 0, 0]
+      }
+    },
+    {
+      "drawableId": "1",
+      "position": {
+        "values": [0.5, 0, 0]
+      },
+      "rotation": {
+        "values": [0, 0, 0]
+      },
+      "scale": {
+        "values": [0, 0, 0]
+      }
+    }
+  ]
+}
