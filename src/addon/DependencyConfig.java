@@ -4,16 +4,16 @@ import java.util.ArrayList;
 
 public class DependencyConfig {
 
-    protected ArrayList<AddOn>  dependencies;
+    protected ArrayList<String>  dependencies;
 
     public DependencyConfig() {
     }
 
-    public ArrayList<AddOn> getDependencies() {
+    public ArrayList<String> getDependencies() {
         return dependencies;
     }
 
-    public boolean addDependency(AddOn ao) {
+    public boolean addDependency(String ao) {
         dependencies.add(ao);
         return true;
     }

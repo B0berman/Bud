@@ -12,6 +12,9 @@ public class ResourceManager {
     }
 
     public Drawable getDrawable(String id) {
+        if (!drawables.containsKey(id)) {
+            System.out.println("Drawable dosen't exist");
+        }
         return drawables.get(id);
     }
 

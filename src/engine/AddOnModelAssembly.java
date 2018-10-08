@@ -12,10 +12,12 @@ public class AddOnModelAssembly {
         this.addOn = addOn;
     }
 
-    public void loadModelAssembly() {
+    public void loadModelAssembly() throws Exception {
         FileDao fd = new FileDao(addOn.getAoPath() + "/model_assembly.json");
         JsonDAO<ModelAssemblyConfig> jd = new JsonDAO<>(ModelAssemblyConfig.class);
         configuration = jd.read(fd.read(null));
+        if (configuration == null || configuration.getChildren().get(configuration.getChildren().size() - 1) == null)
+            throw new Exception("Problem reading configuration file : " + addOn.getAoPath() + "/model_assembly.json");
     }
 
     public ModelAssemblyConfig getConfiguration() {

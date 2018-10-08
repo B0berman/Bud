@@ -1,7 +1,11 @@
 package addon;
 
+import DAO.AddOnDAO;
+import engine.AddOnLoader;
+import engine.ResourceManager;
+
 import java.io.File;
-import java.util.Collection;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -9,7 +13,9 @@ public class AddOnManager {
 
     private static String       ROOT = "./resources/AddOns";
 
-    protected Map<String, AddOn> addOns = new HashMap<String, AddOn>();
+    AddOnLoader addOnLoader = new AddOnLoader();
+    protected ResourceManager       resourceManager;
+    protected Map<String, AddOn>    addOns = new HashMap<String, AddOn>();
 
     public AddOnManager() {
         // get files from root
@@ -28,15 +34,31 @@ public class AddOnManager {
     }
 
     public void exploreAddOns() {
-        File folder = new File(ROOT);
-        for (final File fileEntry : folder.listFiles()) {
-            AddOn ao = new AddOn(fileEntry.getPath());
-            try {
-                ao.explore();
-                addOns.put(ao.getIdentity().getId(), ao);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        AddOnDAO addOnDAO = new AddOnDAO();
+        ArrayList<AddOn> addOnList = addOnDAO.read(new File(ROOT));
+        for (AddOn addOn: addOnList) {
+            addOns.put(addOn.getIdentity().getId(), addOn);
         }
+    }
+
+    public void loadAddOnDependencies(ArrayList<String> result, AddOn addOn) {
+        for (String dependency : addOn.getDependencies()) {
+            loadAddOnDependencies(result, addOns.get(dependency));
+        }
+        if (!result.contains(addOn.getIdentity().getId())) {
+            addOnLoader.loadAddOn(addOns.get(addOn.getIdentity().getId()), resourceManager);
+            result.add(addOn.getIdentity().getId());
+        }
+    }
+
+    public void loadAddons() {
+        ArrayList<String> result = new ArrayList<>();
+        for (AddOn addOn : addOns.values()) {
+            loadAddOnDependencies(result, addOn);
+        }
+    }
+
+    public void setResourceManager(ResourceManager resourceManager) {
+        this.resourceManager = resourceManager;
     }
 }

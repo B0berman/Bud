@@ -3,9 +3,11 @@ package addon;
 import DAO.FileDao;
 import DAO.JsonDAO;
 
+import java.util.ArrayList;
+
 public class AddOn {
 
-    private static String       DPENDENCY = "/dependency.json";
+    private static String       DPENDENCY = "/dependencies.json";
     private static String       IDENTITY = "/identity.json";
     private static String       PROPERTY = "/properties.json";
 
@@ -23,24 +25,30 @@ public class AddOn {
         FileDao fd = new FileDao(path);
         JsonDAO<IdentityConfig> jd = new JsonDAO<>(IdentityConfig.class);
         identity = jd.read(fd.read(null));
+        if (identity == null)
+            throw new Exception("Problem reading identity.json");
     }
 
     private void loadProperties(String path) throws Exception {
         FileDao fd = new FileDao(path);
         JsonDAO<PropertiesConfig> jd = new JsonDAO<>(PropertiesConfig.class);
         properties = jd.read(fd.read(null));
+        if (properties == null)
+            throw new Exception("Problem reading properties.json");
     }
 
     private void loadDependencies(String path) throws Exception {
         FileDao fd = new FileDao(path);
         JsonDAO<DependencyConfig> jd = new JsonDAO<>(DependencyConfig.class);
-        DependencyConfig dc = jd.read(fd.read(null));
+        dependencies = jd.read(fd.read(null));
+        if (dependencies.getDependencies() == null)
+            throw new Exception("Problem reading dependencies.json");
         // set variables
     }
 
     public void explore() throws Exception {
         loadIdentity(aoPath + IDENTITY);
-//        loadDependencies(aoPath + DPENDENCY);
+        loadDependencies(aoPath + DPENDENCY);
         loadProperties(aoPath + PROPERTY);
     }
 
@@ -52,7 +60,7 @@ public class AddOn {
         return identity;
     }
 
-    public DependencyConfig getDependencies() {
-        return dependencies;
+    public ArrayList<String> getDependencies() {
+        return dependencies.getDependencies();
     }
 }

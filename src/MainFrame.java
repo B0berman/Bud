@@ -15,7 +15,6 @@ import com.jogamp.opengl.util.gl2.GLUT;
 import engine.AddOnLoader;
 import engine.Drawable;
 import engine.ResourceManager;
-import engine.Test;
 
 public class MainFrame extends JFrame implements GLEventListener{
 
@@ -70,11 +69,9 @@ public class MainFrame extends JFrame implements GLEventListener{
 
         AddOnManager am = new AddOnManager();
         am.exploreAddOns();
-        AddOnLoader addOnLoader = new AddOnLoader(resourceManager);
+        am.setResourceManager(resourceManager);
+        am.loadAddons();
 
-        for (AddOn ao : am.getAddOns().values()) {
-            addOnLoader.loadAddOn(ao);
-        }
 
         Entity test1 = new Entity();
         test1.addDrawable(resourceManager.getDrawable("2"));
@@ -155,5 +152,4 @@ public class MainFrame extends JFrame implements GLEventListener{
 
     private float angle = 0f;
 
-    private Test test = new Test();
 }
